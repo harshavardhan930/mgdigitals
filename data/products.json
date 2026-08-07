@@ -1,0 +1,122 @@
+[
+  {
+    "id": "passport-size-photos",
+    "name": "Passport Size Photos",
+    "category": "Photo Services",
+    "shortDescription": "Professional passport size photo printing.",
+    "description": "High quality passport size photographs suitable for applications, IDs and documents.",
+    "price": "Contact for price",
+    "images": [
+      "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80"
+    ],
+    "videos": [],
+    "featured": true,
+    "available": true
+  },
+  {
+    "id": "id-card-printing",
+    "name": "ID Card Printing",
+    "category": "ID Cards",
+    "shortDescription": "Custom ID card printing with premium finish.",
+    "description": "Professional ID card printing service with quick turnaround for offices, institutions, and personal use.",
+    "price": "₹199 onwards",
+    "images": [
+      "https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=900&q=80"
+    ],
+    "videos": [],
+    "featured": true,
+    "available": true
+  },
+  {
+    "id": "business-cards",
+    "name": "Business Cards",
+    "category": "Business Cards",
+    "shortDescription": "Modern business cards for professional branding.",
+    "description": "Premium-quality business cards in various finishes and sizes for personal or business use.",
+    "price": "₹299 onwards",
+    "images": [
+      "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=900&q=80"
+    ],
+    "videos": [],
+    "featured": true,
+    "available": true
+  },
+  {
+    "id": "invitation-cards",
+    "name": "Invitation Cards",
+    "category": "Invitation Cards",
+    "shortDescription": "Stylish invitation cards for special occasions.",
+    "description": "Customized invitation cards designed for weddings, birthdays, events, and special celebrations.",
+    "price": "₹399 onwards",
+    "images": [
+      "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=900&q=80"
+    ],
+    "videos": [],
+    "featured": false,
+    "available": true
+  },
+  {
+    "id": "photo-frames",
+    "name": "Photo Frames",
+    "category": "Photo Frames",
+    "shortDescription": "Memories framed beautifully for your walls.",
+    "description": "Creative photo frames designed to highlight your favorite moments and portraits with elegance.",
+    "price": "₹499 onwards",
+    "images": [
+      "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80"
+    ],
+    "videos": [],
+    "featured": true,
+    "available": true
+  },
+  {
+    "id": "customized-mug",
+    "name": "Customized Photo Mug",
+    "category": "Customized Gifts",
+    "shortDescription": "Personalized mug with your photo.",
+    "description": "Send your photo through WhatsApp and get it printed on a customized mug for gifting or personal use.",
+    "price": "₹299",
+    "images": [
+      "https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80"
+    ],
+    "videos": [],
+    "featured": true,
+    "available": true
+  },
+  {
+    "id": "banner-printing",
+    "name": "Banner Printing",
+    "category": "Banners",
+    "shortDescription": "Large format banners for events and promotions.",
+    "description": "Custom banners for marketing, events, exhibitions, celebrations, and business promotions.",
+    "price": "₹799 onwards",
+    "images": [
+      "https://images.unsplash.com/photo-1497366412874-3415097a27e7?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=900&q=80"
+    ],
+    "videos": [],
+    "featured": true,
+    "available": true
+  },
+  {
+    "id": "sticker-printing",
+    "name": "Sticker Printing",
+    "category": "Stickers",
+    "shortDescription": "Vibrant sticker prints for branding and decor.",
+    "description": "Custom stickers made for packaging, branding, promotional campaigns, and decorative use.",
+    "price": "₹199 onwards",
+    "images": [
+      "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=900&q=80",
+      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=900&q=80"
+    ],
+    "videos": [],
+    "featured": false,
+    "available": true
+  }
+]

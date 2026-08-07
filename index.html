@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mehar Gayatri Digitals | Digital Printing & Photo Services</title>
+    <meta
+      name="description"
+      content="Mehar Gayatri Digitals offers digital printing, photo services, ID card printing, customized products, and personalized gifting solutions."
+    />
+    <meta property="og:title" content="Mehar Gayatri Digitals" />
+    <meta property="og:description" content="Digital Printing, Photo Services & Customized Products" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a href="./index.html" class="brand" aria-label="Mehar Gayatri Digitals home">
+          <img src="./images/logo/logo.svg" alt="Mehar Gayatri Digitals logo" class="brand-logo" />
+          <span>Mehar Gayatri Digitals</span>
+        </a>
+
+        <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+        <nav class="main-nav" aria-label="Main navigation">
+          <ul>
+            <li><a href="./index.html" class="active">Home</a></li>
+            <li><a href="./products.html">Products</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="./about.html">About</a></li>
+            <li><a href="./contact.html">Contact</a></li>
+          </ul>
+        </nav>
+
+        <div class="header-actions">
+          <form class="search-inline" id="home-search-form" aria-label="Product search">
+            <input type="search" id="home-search-input" placeholder="Search products and services" aria-label="Search" />
+            <button type="submit">Search</button>
+          </form>
+          <div class="dot-menu-wrap">
+            <button class="dot-menu-toggle" aria-label="More options" aria-expanded="false">
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+            <div class="dot-menu hidden">
+              <a href="./admin.html">Admin Panel</a>
+            </div>
+          </div>
+          <a class="button primary" href="https://wa.me/919989278002?text=Hello%20Mehar%20Gayatri%20Digitals%2C%20I%20found%20your%20website%20and%20would%20like%20to%20know%20more%20about%20your%20products%20and%20services." target="_blank" rel="noopener">WhatsApp</a>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="container hero-content">
+          <div class="hero-copy">
+            <p class="eyebrow">Professional Print & Photo Solutions</p>
+            <h1>Mehar Gayatri Digitals</h1>
+            <h2>Digital Printing, Photo Services & Customized Products</h2>
+            <p class="hero-text">
+              High-quality printing, photo services, ID card support, personalized gifts, and custom stationery crafted for homes, businesses, students, and events.
+            </p>
+            <div class="hero-actions">
+              <a class="button primary" href="./products.html">Explore Products</a>
+              <a class="button secondary" href="https://wa.me/919989278002?text=Hello%20Mehar%20Gayatri%20Digitals%2C%20I%20would%20like%20to%20know%20more%20about%20your%20services." target="_blank" rel="noopener">WhatsApp Us</a>
+            </div>
+          </div>
+          <div class="hero-visual" aria-label="Printing and design showcase">
+            <div class="visual-card large">
+              <img src="https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=900&q=80" alt="Printing business display" />
+            </div>
+            <div class="visual-card small top">
+              <img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=600&q=80" alt="Photo printing service" />
+            </div>
+            <div class="visual-card small bottom">
+              <img src="https://images.unsplash.com/photo-1556740749-887f6717d7e4?auto=format&fit=crop&w=600&q=80" alt="Custom product design" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="search-strip">
+        <div class="container narrow">
+          <form class="search-panel" id="home-compact-search" aria-label="Search products">
+            <label for="home-search-field" class="sr-only">Search</label>
+            <input id="home-search-field" type="search" placeholder="Search products and services" />
+            <button type="submit">Find products</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="categories section" id="services">
+        <div class="container">
+          <div class="section-heading">
+            <p class="eyebrow">What we do</p>
+            <h3>Popular Services</h3>
+          </div>
+          <div class="category-grid" id="category-grid"></div>
+        </div>
+      </section>
+
+      <section class="featured section">
+        <div class="container">
+          <div class="section-heading inline">
+            <div>
+              <p class="eyebrow">Top Picks</p>
+              <h3>Featured Products</h3>
+            </div>
+            <a href="./products.html" class="text-link">View all products</a>
+          </div>
+          <div id="featured-products" class="product-grid"></div>
+        </div>
+      </section>
+
+      <section class="cta-banner section">
+        <div class="container cta-box">
+          <div>
+            <p class="eyebrow">Need a custom order?</p>
+            <h3>Send your requirements on WhatsApp for a quick quote.</h3>
+          </div>
+          <a class="button primary" href="https://wa.me/919989278002?text=Hello%20Mehar%20Gayatri%20Digitals%2C%20I%20need%20a%20quote%20for%20my%20custom%20printing%20requirements." target="_blank" rel="noopener">WhatsApp Now</a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <h4>Mehar Gayatri Digitals</h4>
+          <p>Digital Printing | Photo Services | Customized Products</p>
+        </div>
+        <div>
+          <h5>Contact</h5>
+          <ul>
+            <li><a href="tel:+919989278002">+91 9989278002</a></li>
+            <li><a href="https://wa.me/919989278002" target="_blank" rel="noopener">WhatsApp</a></li>
+            <li><a href="mailto:mehargayatridigitals@gmail.com">mehargayatridigitals@gmail.com</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Explore</h5>
+          <ul>
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./products.html">Products</a></li>
+            <li><a href="./about.html">About</a></li>
+            <li><a href="./contact.html">Contact</a></li>
+            <li><a href="https://maps.app.goo.gl/Q1SjzpBzMULkBWda9" target="_blank" rel="noopener">Google Maps</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="container footer-bottom">
+        <p>© <span id="current-year"></span> Mehar Gayatri Digitals. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <a class="floating-whatsapp" href="https://wa.me/919989278002?text=Hello%20Mehar%20Gayatri%20Digitals%2C%20I%20found%20your%20website%20and%20would%20like%20to%20know%20more%20about%20your%20products%20and%20services." target="_blank" rel="noopener" aria-label="WhatsApp us">WhatsApp</a>
+
+    <script src="./js/main.js"></script>
+    <script src="./js/products.js"></script>
+  </body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel | Mehar Gayatri Digitals</title>
+    <meta name="description" content="No-code product management panel for Mehar Gayatri Digitals." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./css/style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a href="./index.html" class="brand" aria-label="Mehar Gayatri Digitals home">
+          <img src="./images/logo/logo.svg" alt="Mehar Gayatri Digitals logo" class="brand-logo" />
+          <span>Mehar Gayatri Digitals</span>
+        </a>
+
+        <nav class="main-nav" aria-label="Main navigation">
+          <ul>
+            <li><a href="./index.html">Home</a></li>
+            <li><a href="./products.html">Products</a></li>
+            <li><a href="./about.html">About</a></li>
+            <li><a href="./contact.html">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main class="section admin-page">
+      <div class="container">
+        <div class="admin-header">
+          <div>
+            <p class="eyebrow">Admin</p>
+            <h1>Product Management</h1>
+          </div>
+          <button id="logout-button" class="button ghost hidden" type="button">Logout</button>
+        </div>
+
+        <div id="admin-login-panel" class="info-card admin-panel">
+          <h3>Secure admin access</h3>
+          <p>Set a password once in this browser to unlock the product dashboard.</p>
+          <form id="admin-login-form" class="admin-form">
+            <label>
+              Admin password
+              <input id="admin-password" type="password" placeholder="Enter password" required />
+            </label>
+            <button class="button primary" type="submit">Unlock Dashboard</button>
+          </form>
+          <p id="admin-message" class="admin-message"></p>
+        </div>
+
+        <div id="admin-dashboard" class="hidden">
+          <div class="admin-grid">
+            <section class="info-card">
+              <h3 id="form-title">Add new product</h3>
+              <form id="product-form" class="admin-form">
+                <input id="product-id" type="hidden" />
+
+                <label>
+                  Product name
+                  <input id="product-name" type="text" placeholder="Customized Photo Mug" required />
+                </label>
+
+                <label>
+                  Category
+                  <select id="product-category" required>
+                    <option value="Digital Printing">Digital Printing</option>
+                    <option value="Photo Services">Photo Services</option>
+                    <option value="ID Cards">ID Cards</option>
+                    <option value="Photo Frames">Photo Frames</option>
+                    <option value="Customized Gifts">Customized Gifts</option>
+                    <option value="Invitation Cards">Invitation Cards</option>
+                    <option value="Business Cards">Business Cards</option>
+                    <option value="Banners">Banners</option>
+                    <option value="Posters">Posters</option>
+                    <option value="Stickers">Stickers</option>
+                    <option value="Lamination">Lamination</option>
+                    <option value="Other Services">Other Services</option>
+                  </select>
+                </label>
+
+                <label>
+                  Short description
+                  <input id="product-short-description" type="text" placeholder="Personalized mug with your photo." required />
+                </label>
+
+                <label>
+                  Full description
+                  <textarea id="product-description" rows="4" placeholder="Detailed description..." required></textarea>
+                </label>
+
+                <label>
+                  Price
+                  <input id="product-price" type="text" placeholder="₹299" required />
+                </label>
+
+                <div>
+                  <label>Product images</label>
+                  <div id="product-images-container" class="multi-field-list">
+                    <div class="multi-field-item">
+                      <input type="url" class="product-image-input" placeholder="https://example.com/image1.jpg" />
+                    </div>
+                  </div>
+                  <button id="add-image-field" class="button ghost small-button" type="button">Add another image</button>
+                </div>
+
+                <div>
+                  <label>Product videos</label>
+                  <div id="product-videos-container" class="multi-field-list">
+                    <div class="multi-field-item">
+                      <input type="url" class="product-video-input" placeholder="https://example.com/video1.mp4" />
+                    </div>
+                  </div>
+                  <button id="add-video-field" class="button ghost small-button" type="button">Add another video</button>
+                </div>
+
+                <div class="checkbox-row">
+                  <label><input id="product-featured" type="checkbox" /> Featured product</label>
+                  <label><input id="product-available" type="checkbox" checked /> Available</label>
+                </div>
+
+                <div class="form-actions">
+                  <button class="button primary" type="submit">Save product</button>
+                  <button id="reset-product-form" class="button ghost" type="button">New product</button>
+                </div>
+              </form>
+            </section>
+
+            <section class="info-card admin-list-panel">
+              <div class="list-header">
+                <h3>Current products</h3>
+                <button id="seed-products" class="button secondary" type="button">Load sample data</button>
+              </div>
+              <div id="admin-product-list" class="product-admin-list"></div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-bottom">
+        <p>© <span id="current-year"></span> Mehar Gayatri Digitals. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script src="./js/main.js"></script>
+    <script src="./js/admin.js"></script>
+  </body>
+</html>
