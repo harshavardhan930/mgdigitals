@@ -31,18 +31,19 @@ function renderProductDetail(product) {
   const container = document.getElementById('product-detail');
   if (!container) return;
 
-  const mainImage = product.images?.[0] || './images/logo/logo.svg';
-  const priceText = product.price || 'Contact for price';
-  const videoMarkup = (product.videos || []).length
+  const normalizedProduct = normalizeProductMedia(product);
+  const mainImage = normalizedProduct.images?.[0] || './images/logo/logo.svg';
+  const priceText = normalizedProduct.price || 'Contact for price';
+  const videoMarkup = (normalizedProduct.videos || []).length
     ? `
       <div>
         <h4>Product Video</h4>
         <div class="video-thumb-row">
-          ${product.videos
+          ${normalizedProduct.videos
             .map(
               (video, index) => `
                 <button class="video-thumb" type="button" data-video="${video}" data-index="${index}" aria-label="Play video ${index + 1}">
-                  <img src="${product.images?.[index] || product.images?.[0] || './images/logo/logo.svg'}" alt="Video preview ${index + 1}" loading="lazy" />
+                  <img src="${normalizedProduct.images?.[index] || normalizedProduct.images?.[0] || './images/logo/logo.svg'}" alt="Video preview ${index + 1}" loading="lazy" />
                 </button>
               `
             )
@@ -52,7 +53,7 @@ function renderProductDetail(product) {
     `
     : '';
 
-  const galleryImages = product.images && product.images.length ? product.images : [mainImage];
+  const galleryImages = normalizedProduct.images && normalizedProduct.images.length ? normalizedProduct.images : [mainImage];
 
   container.innerHTML = `
     <article class="product-detail-layout">
@@ -76,12 +77,12 @@ function renderProductDetail(product) {
 
       <div class="product-info">
         <div class="info-meta">
-          <span class="category-tag">${product.category}</span>
-          <span class="availability ${product.available ? 'available' : 'unavailable'}">${product.available ? 'Available' : 'Unavailable'}</span>
+          <span class="category-tag">${normalizedProduct.category}</span>
+          <span class="availability ${normalizedProduct.available ? 'available' : 'unavailable'}">${normalizedProduct.available ? 'Available' : 'Unavailable'}</span>
         </div>
-        <h1>${product.name}</h1>
+        <h1>${normalizedProduct.name}</h1>
         <div class="info-price">${priceText}</div>
-        <p class="product-description">${product.description}</p>
+        <p class="product-description">${normalizedProduct.description}</p>
 
         <div class="product-options">
           <h4>Product options</h4>
@@ -92,7 +93,7 @@ function renderProductDetail(product) {
           </ul>
         </div>
 
-        <a class="button primary" href="${buildWhatsAppLink(product.name, priceText, window.location.href)}" target="_blank" rel="noopener">WhatsApp Enquiry</a>
+        <a class="button primary" href="${buildWhatsAppLink(normalizedProduct.name, priceText, window.location.href)}" target="_blank" rel="noopener">WhatsApp Enquiry</a>
         <a class="button secondary" href="tel:+919989278002">Call Now</a>
       </div>
     </article>
@@ -186,7 +187,7 @@ async function loadProductById() {
       products = await response.json();
     }
 
-    const product = products.find((item) => item.id === productId) || products[0];
+    const product = normalizeProductMedia(products.find((item) => item.id === productId) || products[0]);
     if (!product) {
       document.getElementById('product-detail').innerHTML = '<p>Product not found.</p>';
       return;

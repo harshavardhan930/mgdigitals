@@ -1,6 +1,21 @@
 const ADMIN_PASSWORD_KEY = 'mehar-gayatri-digitals-admin-password';
 const PRODUCT_STORAGE_KEY = 'mehar-gayatri-digitals-products';
 
+const categoryIcons = {
+  'Digital Printing': '🖨️',
+  'Photo Services': '📷',
+  'ID Cards': '🪪',
+  'Photo Frames': '🖼️',
+  'Customized Gifts': '🎁',
+  'Invitation Cards': '💌',
+  'Business Cards': '💼',
+  'Banners': '📣',
+  'Posters': '🧾',
+  'Stickers': '🏷️',
+  'Lamination': '📘',
+  'Other Services': '🔧'
+};
+
 function isAdminUnlocked() {
   return localStorage.getItem(ADMIN_PASSWORD_KEY) === 'mgd-admin-2026';
 }
@@ -55,18 +70,57 @@ function collectMultiInputValues(containerSelector, inputSelector) {
   return normalizeFieldList(Array.from(inputs).map((input) => input.value));
 }
 
+function createMediaRow({ type, placeholder, value = '' }) {
+  const row = document.createElement('div');
+  row.className = 'multi-field-item';
+
+  const input = document.createElement('input');
+  input.type = 'url';
+  input.value = value;
+  input.placeholder = placeholder;
+  input.className = type === 'image' ? 'product-image-input' : 'product-video-input';
+
+  const removeButton = document.createElement('button');
+  removeButton.type = 'button';
+  removeButton.className = 'remove-media-button';
+  removeButton.textContent = 'Remove';
+  removeButton.title = 'Remove this item';
+  removeButton.addEventListener('click', () => {
+    row.remove();
+  });
+
+  row.appendChild(input);
+  row.appendChild(removeButton);
+  return row;
+}
+
+function addMediaRow(containerId, type, placeholder, value = '') {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+  container.appendChild(createMediaRow({ type, placeholder, value }));
+}
+
 function buildProductPayload(form) {
+  const productIdField = form.querySelector('#product-id');
+  const nameField = form.querySelector('#product-name');
+  const categoryField = form.querySelector('#product-category');
+  const shortDescriptionField = form.querySelector('#product-short-description');
+  const descriptionField = form.querySelector('#product-description');
+  const priceField = form.querySelector('#product-price');
+  const featuredField = form.querySelector('#product-featured');
+  const availableField = form.querySelector('#product-available');
+
   return {
-    id: form.id.value || slugify(form.name.value),
-    name: form.name.value.trim(),
-    category: form.category.value,
-    shortDescription: form.shortDescription.value.trim(),
-    description: form.description.value.trim(),
-    price: form.price.value.trim(),
+    id: productIdField?.value || slugify(nameField?.value || ''),
+    name: (nameField?.value || '').trim(),
+    category: categoryField?.value || 'Digital Printing',
+    shortDescription: (shortDescriptionField?.value || '').trim(),
+    description: (descriptionField?.value || '').trim(),
+    price: (priceField?.value || '').trim(),
     images: collectMultiInputValues('#product-images-container', '.product-image-input'),
     videos: collectMultiInputValues('#product-videos-container', '.product-video-input'),
-    featured: form.featured.checked,
-    available: form.available.checked
+    featured: !!featuredField?.checked,
+    available: availableField ? availableField.checked : true
   };
 }
 
@@ -83,28 +137,34 @@ function renderProductsList() {
 
   list.innerHTML = products
     .map(
-      (product) => `
-        <div class="admin-item">
-          <div class="admin-item-image">
-            <img src="${product.images?.[0] || './images/logo/logo.svg'}" alt="${product.name}" loading="lazy" />
-          </div>
-          <div class="admin-item-content">
-            <div class="admin-item-top">
-              <strong>${product.name}</strong>
-              <span>${product.category}</span>
+      (product) => {
+        const icon = categoryIcons[product.category] || '📦';
+        return `
+          <div class="admin-item">
+            <div class="admin-item-image">
+              <img src="${product.images?.[0] || './images/logo/logo.svg'}" alt="${product.name}" loading="lazy" />
             </div>
-            <p>${product.shortDescription}</p>
-            <div class="admin-item-meta">
-              <span>${product.price}</span>
-              <span>${product.available ? 'Available' : 'Unavailable'}</span>
+            <div class="admin-item-content">
+              <div class="admin-item-top">
+                <div class="admin-item-title">
+                  <span class="admin-item-icon">${icon}</span>
+                  <strong>${product.name}</strong>
+                </div>
+                <span class="admin-item-badge">${product.category}</span>
+              </div>
+              <p>${product.shortDescription}</p>
+              <div class="admin-item-meta">
+                <span class="meta-pill">${product.price}</span>
+                <span class="status-pill ${product.available ? 'available' : 'unavailable'}">${product.available ? 'Available' : 'Unavailable'}</span>
+              </div>
+            </div>
+            <div class="admin-item-actions">
+              <button type="button" class="button secondary tiny" data-edit="${product.id}">✎ Edit</button>
+              <button type="button" class="button ghost tiny danger" data-delete="${product.id}">🗑 Delete</button>
             </div>
           </div>
-          <div class="admin-item-actions">
-            <button type="button" class="button secondary tiny" data-edit="${product.id}">Edit</button>
-            <button type="button" class="button ghost tiny danger" data-delete="${product.id}">Delete</button>
-          </div>
-        </div>
-      `
+        `;
+      }
     )
     .join('');
 
@@ -132,17 +192,11 @@ function populateForm(productId) {
   const videoUrls = product.videos && product.videos.length ? product.videos : [''];
 
   imageUrls.forEach((url) => {
-    const wrap = document.createElement('div');
-    wrap.className = 'multi-field-item';
-    wrap.innerHTML = `<input type="url" class="product-image-input" value="${url}" placeholder="https://example.com/image.jpg" />`;
-    imageContainer.appendChild(wrap);
+    addMediaRow('product-images-container', 'image', 'https://example.com/image.jpg', url);
   });
 
   videoUrls.forEach((url) => {
-    const wrap = document.createElement('div');
-    wrap.className = 'multi-field-item';
-    wrap.innerHTML = `<input type="url" class="product-video-input" value="${url}" placeholder="https://example.com/video.mp4" />`;
-    videoContainer.appendChild(wrap);
+    addMediaRow('product-videos-container', 'video', 'https://example.com/video.mp4', url);
   });
 
   document.getElementById('product-id').value = product.id;
@@ -160,7 +214,7 @@ function populateForm(productId) {
 
 function resetForm() {
   const productForm = document.getElementById('product-form');
-  productForm.reset();
+  if (productForm) productForm.reset();
   document.getElementById('product-id').value = '';
   document.getElementById('product-category').value = 'Digital Printing';
   document.getElementById('product-available').checked = true;
@@ -168,8 +222,11 @@ function resetForm() {
   const imageContainer = document.getElementById('product-images-container');
   const videoContainer = document.getElementById('product-videos-container');
 
-  imageContainer.innerHTML = '<div class="multi-field-item"><input type="url" class="product-image-input" placeholder="https://example.com/image1.jpg" /></div>';
-  videoContainer.innerHTML = '<div class="multi-field-item"><input type="url" class="product-video-input" placeholder="https://example.com/video1.mp4" /></div>';
+  imageContainer.innerHTML = '';
+  videoContainer.innerHTML = '';
+
+  addMediaRow('product-images-container', 'image', 'https://drive.google.com/uc?export=view&id=FILE_ID');
+  addMediaRow('product-videos-container', 'video', 'https://example.com/video.mp4');
 
   document.getElementById('form-title').textContent = 'Add new product';
 }
@@ -183,7 +240,7 @@ function deleteProduct(productId) {
 function handleProductSubmit(event) {
   event.preventDefault();
   const form = event.target;
-  const payload = buildProductPayload(form.elements);
+  const payload = buildProductPayload(form);
 
   if (!payload.name || !payload.shortDescription || !payload.description || !payload.price) {
     return;
@@ -271,6 +328,11 @@ function attachAdminEvents() {
       event.preventDefault();
       const passwordInput = document.getElementById('admin-password');
       const message = document.getElementById('admin-message');
+
+      if (!passwordInput) {
+        return;
+      }
+
       const value = passwordInput.value.trim();
 
       if (value === 'mgd-admin-2026') {
@@ -311,22 +373,14 @@ function attachAdminEvents() {
   const addImageButton = document.getElementById('add-image-field');
   if (addImageButton) {
     addImageButton.addEventListener('click', () => {
-      const container = document.getElementById('product-images-container');
-      const item = document.createElement('div');
-      item.className = 'multi-field-item';
-      item.innerHTML = '<input type="url" class="product-image-input" placeholder="https://example.com/image.jpg" />';
-      container.appendChild(item);
+      addMediaRow('product-images-container', 'image', 'https://drive.google.com/uc?export=view&id=FILE_ID');
     });
   }
 
   const addVideoButton = document.getElementById('add-video-field');
   if (addVideoButton) {
     addVideoButton.addEventListener('click', () => {
-      const container = document.getElementById('product-videos-container');
-      const item = document.createElement('div');
-      item.className = 'multi-field-item';
-      item.innerHTML = '<input type="url" class="product-video-input" placeholder="https://example.com/video.mp4" />';
-      container.appendChild(item);
+      addMediaRow('product-videos-container', 'video', 'https://example.com/video.mp4');
     });
   }
 }

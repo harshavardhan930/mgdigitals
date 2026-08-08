@@ -97,24 +97,22 @@
                   <input id="product-price" type="text" placeholder="₹299" required />
                 </label>
 
-                <div>
-                  <label>Product images</label>
-                  <div id="product-images-container" class="multi-field-list">
-                    <div class="multi-field-item">
-                      <input type="url" class="product-image-input" placeholder="https://example.com/image1.jpg" />
-                    </div>
+                <div class="media-group">
+                  <div class="media-group-header">
+                    <label>Product images</label>
+                    <button id="add-image-field" class="small-link-button" type="button">+ Add image URL</button>
                   </div>
-                  <button id="add-image-field" class="button ghost small-button" type="button">Add another image</button>
+                  <p class="media-help">Use public Google Drive, Dropbox, or cloud-hosted image links.</p>
+                  <div id="product-images-container" class="multi-field-list"></div>
                 </div>
 
-                <div>
-                  <label>Product videos</label>
-                  <div id="product-videos-container" class="multi-field-list">
-                    <div class="multi-field-item">
-                      <input type="url" class="product-video-input" placeholder="https://example.com/video1.mp4" />
-                    </div>
+                <div class="media-group">
+                  <div class="media-group-header">
+                    <label>Product videos</label>
+                    <button id="add-video-field" class="small-link-button" type="button">+ Add video URL</button>
                   </div>
-                  <button id="add-video-field" class="button ghost small-button" type="button">Add another video</button>
+                  <p class="media-help">Paste direct public video links if you want product demos.</p>
+                  <div id="product-videos-container" class="multi-field-list"></div>
                 </div>
 
                 <div class="checkbox-row">

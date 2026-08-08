@@ -36,26 +36,27 @@ function buildWhatsAppLink(productName, productPrice, currentUrl) {
 }
 
 function formatProductCard(product) {
-  const firstImage = product.images && product.images[0] ? product.images[0] : './images/logo/logo.svg';
-  const priceText = product.price || 'Contact for price';
-  const availabilityText = product.available ? 'Available' : 'Unavailable';
-  const productLink = `./product.html?id=${encodeURIComponent(product.id)}`;
-  const whatsappLink = buildWhatsAppLink(product.name, priceText, window.location.href);
+  const normalizedProduct = normalizeProductMedia(product);
+  const firstImage = normalizedProduct.images && normalizedProduct.images[0] ? normalizedProduct.images[0] : './images/logo/logo.svg';
+  const priceText = normalizedProduct.price || 'Contact for price';
+  const availabilityText = normalizedProduct.available ? 'Available' : 'Unavailable';
+  const productLink = `./product.html?id=${encodeURIComponent(normalizedProduct.id)}`;
+  const whatsappLink = buildWhatsAppLink(normalizedProduct.name, priceText, window.location.href);
 
   return `
     <article class="product-card" data-category="${product.category}">
-      <a href="${productLink}" aria-label="View details for ${product.name}">
+      <a href="${productLink}" aria-label="View details for ${normalizedProduct.name}">
         <div class="product-image-wrap">
-          <img src="${firstImage}" alt="${product.name}" loading="lazy" />
+          <img src="${firstImage}" alt="${normalizedProduct.name}" loading="lazy" />
         </div>
       </a>
       <div class="product-card-body">
         <div class="product-badges">
-          <span class="category-tag">${categoryIcons[product.category] || '✨'} ${product.category}</span>
-          <span class="availability ${product.available ? 'available' : 'unavailable'}">${availabilityText}</span>
+          <span class="category-tag">${categoryIcons[normalizedProduct.category] || '✨'} ${normalizedProduct.category}</span>
+          <span class="availability ${normalizedProduct.available ? 'available' : 'unavailable'}">${availabilityText}</span>
         </div>
-        <h4>${product.name}</h4>
-        <p>${product.shortDescription}</p>
+        <h4>${normalizedProduct.name}</h4>
+        <p>${normalizedProduct.shortDescription}</p>
         <div class="price-row">
           <span class="product-price">${priceText}</span>
         </div>
@@ -104,7 +105,7 @@ async function loadProducts() {
   if (localProducts) {
     try {
       const parsed = JSON.parse(localProducts);
-      if (Array.isArray(parsed) && parsed.length) return parsed;
+      if (Array.isArray(parsed) && parsed.length) return parsed.map((product) => normalizeProductMedia(product));
     } catch (error) {
       console.error('Invalid saved product data:', error);
     }
@@ -114,7 +115,7 @@ async function loadProducts() {
     const response = await fetch('./data/products.json');
     if (!response.ok) throw new Error('Failed to load products');
     const products = await response.json();
-    return products;
+    return Array.isArray(products) ? products.map((product) => normalizeProductMedia(product)) : [];
   } catch (error) {
     console.error('Error loading products:', error);
     return [];

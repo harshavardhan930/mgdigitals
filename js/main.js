@@ -1,3 +1,25 @@
+function normalizeImageUrl(value) {
+    if (!value) return '';
+
+    const trimmed = String(value).trim();
+
+    const googleDriveMatch = trimmed.match(/(?:\/d\/|[?&]id=)([a-zA-Z0-9_-]+)/);
+
+    if (googleDriveMatch) {
+        return `https://drive.google.com/thumbnail?id=${googleDriveMatch[1]}&sz=w1000`;
+    }
+
+    return trimmed;
+}
+
+function normalizeProductMedia(product = {}) {
+  return {
+    ...product,
+    images: (product.images || []).map((image) => normalizeImageUrl(image)).filter(Boolean),
+    videos: (product.videos || []).map((video) => String(video).trim()).filter(Boolean)
+  };
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const navToggle = document.querySelector('.nav-toggle');
   const mainNav = document.querySelector('.main-nav');
