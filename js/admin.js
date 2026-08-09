@@ -1,5 +1,6 @@
 const ADMIN_PASSWORD_KEY = 'mehar-gayatri-digitals-admin-password';
 const PRODUCT_STORAGE_KEY = 'mehar-gayatri-digitals-products';
+const GOOGLE_SHEET_API = "https://script.google.com/macros/s/AKfycbyQ_MYMw9f7ZRQ4fKTTyAwKz_BeCaBLVsXe9_FPamCrznbNTFxFskVL60ij7GOTh10R/exec";
 
 const categoryIcons = {
   'Digital Printing': '🖨️',
@@ -44,6 +45,492 @@ function getProducts() {
   return [];
 }
 
+function uploadImage(data) {
+
+  try {
+
+    if (!data) {
+      return jsonResponse({
+        success: false,
+        error: "No upload data received."
+      });
+    }
+
+    if (!data.base64) {
+      return jsonResponse({
+        success: false,
+        error: "Base64 image data is missing."
+      });
+    }
+
+    if (!data.fileName) {
+      return jsonResponse({
+        success: false,
+        error: "File name is missing."
+      });
+    }
+
+
+    /*
+     * Extract Base64 content.
+     *
+     * Example:
+     * data:image/jpeg;base64,/9j/4AAQ...
+     */
+
+    const commaIndex =
+      data.base64.indexOf(",");
+
+    if (commaIndex === -1) {
+      return jsonResponse({
+        success: false,
+        error: "Invalid Base64 image format."
+      });
+    }
+
+
+    const base64Data =
+      data.base64.substring(
+        commaIndex + 1
+      );
+
+
+    if (!base64Data) {
+      return jsonResponse({
+        success: false,
+        error: "Base64 image content is empty."
+      });
+    }
+
+
+    /*
+     * Decode Base64.
+     */
+
+    const bytes =
+      Utilities.base64Decode(
+        base64Data
+      );
+
+
+    /*
+     * IMPORTANT:
+     * Stop if decoded image is 0 bytes.
+     */
+
+    if (!bytes || bytes.length === 0) {
+
+      return jsonResponse({
+        success: false,
+        error: "Decoded image contains 0 bytes."
+      });
+    }
+
+
+    /*
+     * Get Google Drive folder.
+     */
+
+    const folder =
+      DriveApp.getFolderById(
+        DRIVE_FOLDER_ID
+      );
+
+
+    /*
+     * Create image Blob.
+     */
+
+    const blob =
+      Utilities.newBlob(
+        bytes,
+        data.mimeType || "image/jpeg",
+        data.fileName
+      );
+
+
+    /*
+     * Verify Blob before creating Drive file.
+     */
+
+    const blobSize =
+      blob.getBytes().length;
+
+
+    if (blobSize === 0) {
+
+      return jsonResponse({
+        success: false,
+        error: "Blob contains 0 bytes."
+      });
+    }
+
+
+    /*
+     * Create Drive file.
+     */
+
+    const file =
+      folder.createFile(blob);
+
+
+    /*
+     * Make image publicly accessible.
+     */
+
+    file.setSharing(
+      DriveApp.Access.ANYONE_WITH_LINK,
+      DriveApp.Permission.VIEW
+    );
+
+
+    /*
+     * Get Drive file ID.
+     */
+
+    const fileId =
+      file.getId();
+
+
+    /*
+     * Image URL used by your website.
+     */
+
+    const imageUrl =
+      "https://drive.google.com/uc?export=view&id=" +
+      fileId;
+
+
+    return jsonResponse({
+
+      success: true,
+
+      fileId: fileId,
+
+      url: imageUrl,
+
+      fileName: file.getName(),
+
+      size: file.getSize()
+    });
+
+
+  } catch (error) {
+
+    console.error(
+      "IMAGE UPLOAD ERROR:",
+      error
+    );
+
+    return jsonResponse({
+
+      success: false,
+
+      error:
+        error.toString()
+    });
+  }
+}
+
+
+
+
+async function uploadImageToDrive(file) {
+
+  if (!file) {
+    throw new Error(
+      "No image selected."
+    );
+  }
+
+
+  /*
+   * Check browser file size.
+   */
+
+  if (file.size === 0) {
+
+    throw new Error(
+      "The selected image is 0 bytes."
+    );
+  }
+
+
+  console.log(
+    "Uploading image:",
+    file.name
+  );
+
+  console.log(
+    "Image type:",
+    file.type
+  );
+
+  console.log(
+    "Image size:",
+    file.size,
+    "bytes"
+  );
+
+
+  /*
+   * Convert image to Base64.
+   */
+
+  const reader =
+    new FileReader();
+
+
+  const base64 =
+    await new Promise(
+      (resolve, reject) => {
+
+        reader.onload = () => {
+
+          if (!reader.result) {
+
+            reject(
+              new Error(
+                "Failed to read image."
+              )
+            );
+
+            return;
+          }
+
+          resolve(
+            reader.result
+          );
+        };
+
+
+        reader.onerror = () => {
+
+          reject(
+            new Error(
+              "FileReader could not read the image."
+            )
+          );
+
+        };
+
+
+        reader.readAsDataURL(file);
+
+      }
+    );
+
+
+  /*
+   * Verify Base64.
+   */
+
+  if (
+    typeof base64 !== "string" ||
+    base64.length < 100
+  ) {
+
+    throw new Error(
+      "Image Base64 data is empty or invalid."
+    );
+  }
+
+
+  console.log(
+    "Base64 size:",
+    base64.length,
+    "characters"
+  );
+
+
+  /*
+   * Send to Apps Script.
+   */
+
+  const response =
+    await fetch(
+      GOOGLE_SHEET_API,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "text/plain;charset=utf-8"
+        },
+
+        body: JSON.stringify({
+
+          action:
+            "uploadImage",
+
+          fileName:
+            file.name,
+
+          mimeType:
+            file.type,
+
+          base64:
+            base64
+
+        })
+      }
+    );
+
+
+  if (!response.ok) {
+
+    throw new Error(
+      "Apps Script returned HTTP " +
+      response.status
+    );
+  }
+
+
+  const result =
+    await response.json();
+
+
+  console.log(
+    "Upload response:",
+    result
+  );
+
+
+  if (!result.success) {
+
+    throw new Error(
+      result.error ||
+      "Image upload failed."
+    );
+  }
+
+
+  if (!result.url) {
+
+    throw new Error(
+      "Google Drive did not return an image URL."
+    );
+  }
+
+
+  if (
+    result.size !== undefined &&
+    Number(result.size) === 0
+  ) {
+
+    throw new Error(
+      "Google Drive created a 0 byte file."
+    );
+  }
+
+
+  return result.url;
+}
+
+async function handleProductSubmit(event) {
+
+  event.preventDefault();
+
+  const form =
+    event.target;
+
+  try {
+
+    /*
+     * Collect product information
+     */
+
+    const payload =
+      await buildProductPayload(form);
+
+
+    /*
+     * Validate
+     */
+
+    if (
+      !payload.name ||
+      !payload.shortDescription ||
+      !payload.description ||
+      !payload.price
+    ) {
+
+      alert(
+        "Please fill all required fields."
+      );
+
+      return;
+    }
+
+
+    /*
+     * Save to Google Sheets
+     */
+
+    const result =
+      await saveProductToGoogleSheet(
+        payload
+      );
+
+
+    console.log(
+      "Google Sheet result:",
+      result
+    );
+
+
+    /*
+     * Refresh local admin display
+     */
+
+    const products =
+      getProducts();
+
+    const index =
+      products.findIndex(
+        item =>
+          item.id === payload.id
+      );
+
+
+    if (index >= 0) {
+
+      products[index] = payload;
+
+    } else {
+
+      products.unshift(payload);
+    }
+
+
+    saveProducts(products);
+
+    renderProductsList();
+
+    resetForm();
+
+
+    alert(
+      result.action === "updated"
+        ? "Product updated successfully."
+        : "Product added successfully."
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Product save failed:",
+      error
+    );
+
+    alert(
+      "Failed to save product: " +
+      error.message
+    );
+  }
+}
+
 function saveProducts(products) {
   localStorage.setItem(PRODUCT_STORAGE_KEY, JSON.stringify(products));
 }
@@ -70,27 +557,115 @@ function collectMultiInputValues(containerSelector, inputSelector) {
   return normalizeFieldList(Array.from(inputs).map((input) => input.value));
 }
 
-function createMediaRow({ type, placeholder, value = '' }) {
+function createMediaRow({
+  type,
+  placeholder,
+  value = ''
+}) {
   const row = document.createElement('div');
   row.className = 'multi-field-item';
 
-  const input = document.createElement('input');
+  if (type === 'image') {
+
+    const input = document.createElement('input');
+
+    input.type = 'file';
+    input.accept = 'image/png,image/jpeg,image/webp';
+    input.className = 'product-image-input';
+
+
+    const preview = document.createElement('img');
+
+    preview.className = 'product-image-preview';
+
+    preview.style.width = '100px';
+    preview.style.height = '100px';
+    preview.style.objectFit = 'cover';
+    preview.style.borderRadius = '8px';
+
+
+    if (value) {
+      preview.src = value;
+      input.dataset.imageUrl = value;
+    }
+
+
+    input.addEventListener('change', () => {
+
+      const file = input.files[0];
+
+      if (!file) {
+        return;
+      }
+
+      const reader = new FileReader();
+
+      reader.onload = (event) => {
+        preview.src = event.target.result;
+      };
+
+      reader.readAsDataURL(file);
+    });
+
+
+    const removeButton =
+      document.createElement('button');
+
+    removeButton.type = 'button';
+    removeButton.className =
+      'remove-media-button';
+    removeButton.textContent = 'Remove';
+
+
+    removeButton.addEventListener(
+      'click',
+      () => {
+        row.remove();
+      }
+    );
+
+
+    row.appendChild(input);
+    row.appendChild(preview);
+    row.appendChild(removeButton);
+
+    return row;
+  }
+
+
+  // Video input remains URL based
+
+  const input =
+    document.createElement('input');
+
   input.type = 'url';
   input.value = value;
   input.placeholder = placeholder;
-  input.className = type === 'image' ? 'product-image-input' : 'product-video-input';
+  input.className =
+    'product-video-input';
 
-  const removeButton = document.createElement('button');
+
+  const removeButton =
+    document.createElement('button');
+
   removeButton.type = 'button';
-  removeButton.className = 'remove-media-button';
+  removeButton.className =
+    'remove-media-button';
+
   removeButton.textContent = 'Remove';
-  removeButton.title = 'Remove this item';
-  removeButton.addEventListener('click', () => {
-    row.remove();
-  });
+
+
+  removeButton.addEventListener(
+    'click',
+    () => {
+      row.remove();
+    }
+  );
+
 
   row.appendChild(input);
   row.appendChild(removeButton);
+
   return row;
 }
 
@@ -100,28 +675,195 @@ function addMediaRow(containerId, type, placeholder, value = '') {
   container.appendChild(createMediaRow({ type, placeholder, value }));
 }
 
-function buildProductPayload(form) {
-  const productIdField = form.querySelector('#product-id');
-  const nameField = form.querySelector('#product-name');
-  const categoryField = form.querySelector('#product-category');
-  const shortDescriptionField = form.querySelector('#product-short-description');
-  const descriptionField = form.querySelector('#product-description');
-  const priceField = form.querySelector('#product-price');
-  const featuredField = form.querySelector('#product-featured');
-  const availableField = form.querySelector('#product-available');
+async function buildProductPayload(form) {
+
+  const productIdField =
+    form.querySelector(
+      "#product-id"
+    );
+
+  const nameField =
+    form.querySelector(
+      "#product-name"
+    );
+
+  const categoryField =
+    form.querySelector(
+      "#product-category"
+    );
+
+  const shortDescriptionField =
+    form.querySelector(
+      "#product-short-description"
+    );
+
+  const descriptionField =
+    form.querySelector(
+      "#product-description"
+    );
+
+  const priceField =
+    form.querySelector(
+      "#product-price"
+    );
+
+  const featuredField =
+    form.querySelector(
+      "#product-featured"
+    );
+
+  const availableField =
+    form.querySelector(
+      "#product-available"
+    );
+
+
+  const imageInputs =
+    document.querySelectorAll(
+      "#product-images-container .product-image-input"
+    );
+
+
+  const imageUrls = [];
+
+
+  /*
+   * Upload every selected image.
+   */
+
+  for (
+    const input of imageInputs
+  ) {
+
+    if (
+      input.files &&
+      input.files.length > 0
+    ) {
+
+      const imageUrl =
+        await uploadImageToDrive(
+          input.files[0]
+        );
+
+      imageUrls.push(
+        imageUrl
+      );
+
+    } else if (
+      input.dataset.imageUrl
+    ) {
+
+      /*
+       * Keep existing image
+       * when editing.
+       */
+
+      imageUrls.push(
+        input.dataset.imageUrl
+      );
+    }
+  }
+
+
+  /*
+   * Collect videos.
+   */
+
+  const videoUrls =
+    collectMultiInputValues(
+      "#product-videos-container",
+      ".product-video-input"
+    );
+
 
   return {
-    id: productIdField?.value || slugify(nameField?.value || ''),
-    name: (nameField?.value || '').trim(),
-    category: categoryField?.value || 'Digital Printing',
-    shortDescription: (shortDescriptionField?.value || '').trim(),
-    description: (descriptionField?.value || '').trim(),
-    price: (priceField?.value || '').trim(),
-    images: collectMultiInputValues('#product-images-container', '.product-image-input'),
-    videos: collectMultiInputValues('#product-videos-container', '.product-video-input'),
-    featured: !!featuredField?.checked,
-    available: availableField ? availableField.checked : true
+
+    id:
+      productIdField?.value ||
+      slugify(
+        nameField?.value || ""
+      ),
+
+    name:
+      (
+        nameField?.value || ""
+      ).trim(),
+
+    category:
+      categoryField?.value ||
+      "Digital Printing",
+
+    shortDescription:
+      (
+        shortDescriptionField?.value || ""
+      ).trim(),
+
+    description:
+      (
+        descriptionField?.value || ""
+      ).trim(),
+
+    price:
+      (
+        priceField?.value || ""
+      ).trim(),
+
+    images:
+      imageUrls,
+
+    videos:
+      videoUrls,
+
+    featured:
+      !!featuredField?.checked,
+
+    available:
+      availableField
+        ? availableField.checked
+        : true
   };
+}
+
+async function saveProductToGoogleSheet(
+  product
+) {
+
+  const response =
+    await fetch(
+      GOOGLE_SHEET_API,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type":
+            "text/plain;charset=utf-8"
+        },
+
+        body: JSON.stringify({
+
+          action:
+            "saveProduct",
+
+          ...product
+        })
+      }
+    );
+
+
+  const result =
+    await response.json();
+
+
+  if (!result.success) {
+
+    throw new Error(
+      result.error ||
+      "Could not save product."
+    );
+  }
+
+
+  return result;
 }
 
 function renderProductsList() {
@@ -237,27 +979,151 @@ function deleteProduct(productId) {
   renderProductsList();
 }
 
-function handleProductSubmit(event) {
+async function handleProductSubmit(
+  event
+) {
+
   event.preventDefault();
-  const form = event.target;
-  const payload = buildProductPayload(form);
 
-  if (!payload.name || !payload.shortDescription || !payload.description || !payload.price) {
-    return;
+
+  const form =
+    event.target;
+
+
+  const saveButton =
+    form.querySelector(
+      'button[type="submit"]'
+    );
+
+
+  try {
+
+    saveButton.disabled =
+      true;
+
+    saveButton.textContent =
+      "Uploading...";
+
+
+    /*
+     * Collect data and upload images.
+     */
+
+    const payload =
+      await buildProductPayload(
+        form
+      );
+
+
+    /*
+     * Validate.
+     */
+
+    if (
+      !payload.name ||
+      !payload.shortDescription ||
+      !payload.description ||
+      !payload.price
+    ) {
+
+      alert(
+        "Please fill all required fields."
+      );
+
+      return;
+    }
+
+
+    /*
+     * Save product to Google Sheet.
+     */
+
+    saveButton.textContent =
+      "Saving...";
+
+
+    const result =
+      await saveProductToGoogleSheet(
+        payload
+      );
+
+
+    console.log(
+      "Google Sheets response:",
+      result
+    );
+
+
+    /*
+     * Keep local cache updated.
+     * This is only for the Admin UI.
+     */
+
+    const products =
+      getProducts();
+
+
+    const index =
+      products.findIndex(
+        item =>
+          item.id === payload.id
+      );
+
+
+    if (index >= 0) {
+
+      products[index] = {
+        ...products[index],
+        ...payload
+      };
+
+    } else {
+
+      products.unshift(
+        payload
+      );
+    }
+
+
+    saveProducts(
+      products
+    );
+
+
+    renderProductsList();
+
+    resetForm();
+
+
+    alert(
+      result.action === "updated"
+        ? "Product updated successfully."
+        : "Product added successfully."
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Product save failed:",
+      error
+    );
+
+
+    alert(
+      "Failed to save product.\n\n" +
+      error.message
+    );
+
+
+  } finally {
+
+    saveButton.disabled =
+      false;
+
+    saveButton.textContent =
+      "Save product";
   }
-
-  const products = getProducts();
-  const index = products.findIndex((item) => item.id === payload.id);
-
-  if (index >= 0) {
-    products[index] = { ...products[index], ...payload };
-  } else {
-    products.unshift(payload);
-  }
-
-  saveProducts(products);
-  renderProductsList();
-  resetForm();
 }
 
 function seedSampleProducts() {

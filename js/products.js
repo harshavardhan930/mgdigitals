@@ -47,7 +47,7 @@ function buildWhatsAppLink(productName, productPrice, currentUrl) {
    ========================================================= */
 
 const GOOGLE_SHEET_API =
-  "https://script.google.com/macros/s/AKfycbyvq36fsUwiad5L_G7z9ctYhv7pvaVf1VJpoJsNEYk3DNtvSQyDYLdolWkQFKgha1ye/exec";
+  "https://script.google.com/macros/s/AKfycbyQ_MYMw9f7ZRQ4fKTTyAwKz_BeCaBLVsXe9_FPamCrznbNTFxFskVL60ij7GOTh10R/exec";
 
 const PRODUCT_CACHE_KEY =
   "mehar-gayatri-products-cache-v1";
