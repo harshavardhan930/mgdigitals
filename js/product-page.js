@@ -61,7 +61,7 @@ function setActiveThumbnail(
    ========================================================= */
 
 const GOOGLE_SHEET_API =
-  "PASTE_YOUR_APPS_SCRIPT_URL_HERE";
+  "https://script.google.com/macros/s/AKfycbyvq36fsUwiad5L_G7z9ctYhv7pvaVf1VJpoJsNEYk3DNtvSQyDYLdolWkQFKgha1ye/exec";
 
 const PRODUCT_CACHE_KEY =
   "mehar-gayatri-products-cache-v1";
@@ -235,8 +235,9 @@ async function fetchProductsFromGoogle() {
 function refreshProductsInBackground() {
 
   if (
+    !GOOGLE_SHEET_API ||
     GOOGLE_SHEET_API ===
-    "PASTE_YOUR_APPS_SCRIPT_URL_HERE"
+      "https://script.google.com/macros/s/AKfycbyvq36fsUwiad5L_G7z9ctYhv7pvaVf1VJpoJsNEYk3DNtvSQyDYLdolWkQFKgha1ye/exec"
   ) {
     return;
   }
@@ -845,32 +846,56 @@ function renderRelatedProducts(
     return;
   }
 
+
+  // Normalize category names
+  const normalizeCategory = (category) => {
+    return String(category || "")
+      .trim()
+      .replace(/\s+/g, " ")
+      .toLowerCase();
+  };
+
+
   const currentCategory =
-    currentProduct.category;
-
-  /*
-     Products from the same category.
-     Current product is excluded.
-  */
-
-  const relatedProducts =
-    allProducts.filter(
-      (product) =>
-        product.category === currentCategory &&
-        product.id !== currentProduct.id
+    normalizeCategory(
+      currentProduct.category
     );
 
 
   /*
-     Count products category wise.
-  */
+   * Products from the same category.
+   * Current product is excluded.
+   */
+
+  const relatedProducts =
+    allProducts.filter((product) => {
+
+      const productCategory =
+        normalizeCategory(
+          product.category
+        );
+
+      return (
+        productCategory === currentCategory &&
+        String(product.id) !==
+          String(currentProduct.id)
+      );
+    });
+
+
+  /*
+   * Count products category wise.
+   */
 
   const categoryCounts = {};
 
   allProducts.forEach((product) => {
 
     const category =
-      product.category || "Other Services";
+      String(
+        product.category ||
+        "Other Services"
+      ).trim();
 
     categoryCounts[category] =
       (categoryCounts[category] || 0) + 1;
@@ -878,9 +903,9 @@ function renderRelatedProducts(
 
 
   /*
-     Related product cards.
-     Show maximum 4 products.
-  */
+   * Related product cards.
+   * Show maximum 4 products.
+   */
 
   const relatedCards =
     relatedProducts
@@ -896,6 +921,7 @@ function renderRelatedProducts(
         const price =
           product.price ||
           "Contact for price";
+
 
         return `
           <article class="related-product-card">
@@ -938,14 +964,15 @@ function renderRelatedProducts(
 
 
   /*
-     Category counts.
-  */
+   * Category counts.
+   */
 
   const categoryCountCards =
     Object.entries(categoryCounts)
       .filter(
         ([category]) =>
-          category !== currentCategory
+          normalizeCategory(category) !==
+          currentCategory
       )
       .map(
         ([category, count]) => {
@@ -979,8 +1006,8 @@ function renderRelatedProducts(
 
 
   /*
-     Build the complete section.
-  */
+   * Build the complete section.
+   */
 
   container.innerHTML = `
 
@@ -995,26 +1022,29 @@ function renderRelatedProducts(
           </p>
 
           <h2>
-            More ${currentCategory}
+            More ${currentProduct.category}
           </h2>
 
           <p class="related-category-count">
-            ${
-              relatedProducts.length
-            }
+
+            ${relatedProducts.length}
+
             ${
               relatedProducts.length === 1
                 ? "more product"
                 : "more products"
             }
+
             in this category
+
           </p>
 
         </div>
 
+
         <a
           href="./products.html?category=${encodeURIComponent(
-            currentCategory
+            currentProduct.category
           )}"
           class="text-link"
         >
@@ -1025,7 +1055,8 @@ function renderRelatedProducts(
 
 
       ${
-        relatedProducts.length
+        relatedProducts.length > 0
+
           ? `
             <div class="related-product-grid">
 
@@ -1033,6 +1064,7 @@ function renderRelatedProducts(
 
             </div>
           `
+
           : `
             <div class="no-related-products">
 
