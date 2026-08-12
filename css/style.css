@@ -392,6 +392,7 @@ h3 {
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 18px;
 }
+
 .product-card {
   background: rgba(255,255,255,0.96);
   border: 1px solid var(--border);
