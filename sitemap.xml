@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<urlset
-    xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
     <url>
         <loc>https://www.mgdigitals.store/</loc>
@@ -13,6 +12,26 @@
 
     <url>
         <loc>https://www.mgdigitals.store/product.html</loc>
+    </url>
+
+    <url>
+        <loc>https://www.mgdigitals.store/photo-frames.html</loc>
+    </url>
+
+    <url>
+        <loc>https://www.mgdigitals.store/customized-gifts.html</loc>
+    </url>
+
+    <url>
+        <loc>https://www.mgdigitals.store/digital-printing.html</loc>
+    </url>
+
+    <url>
+        <loc>https://www.mgdigitals.store/id-card-printing.html</loc>
+    </url>
+
+    <url>
+        <loc>https://www.mgdigitals.store/photo-services.html</loc>
     </url>
 
     <url>
