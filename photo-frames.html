@@ -3,15 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/images/logo/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" href="/images/logo/favicon.ico" sizes="any" />
     <link rel="icon" href="/images/logo/favicon.svg" type="image/svg+xml" />
     <link rel="apple-touch-icon" href="/images/logo/apple-touch-icon.png" />
     <link rel="manifest" href="/images/logo/site.webmanifest" />
-    <title>Product Details | Mehar Gayatri Digitals</title>
-    <meta name="description" content="View product details, pricing, gallery, videos, and WhatsApp enquiry options." />
-    <meta property="og:title" content="Product Details | Mehar Gayatri Digitals" />
-    <meta property="og:description" content="Product details and enquiry information." />
+    <title>Photo Frames in Jaggannapeta | Mehar Gayatri Digitals</title>
+    <meta name="description" content="Find beautiful and custom photo frames in Jaggannapeta. We offer a wide range of frames to preserve your precious memories. Contact us for custom designs." />
+    <link rel="canonical" href="https://mgdigitals.store/photo-frames.html" />
+    <meta property="og:title" content="Photo Frames in Jaggannapeta | Mehar Gayatri Digitals" />
+    <meta property="og:description" content="Explore our collection of elegant and modern photo frames. Perfect for gifts and home decor in Jaggannapeta." />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://mgdigitals.store/photo-frames.html" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -24,33 +27,50 @@
           <img src="./images/logo/logo.png" alt="Mehar Gayatri Digitals logo" class="brand-logo" />
           <span>Mehar Gayatri Digitals</span>
         </a>
-
         <button class="nav-toggle" aria-label="Open menu" aria-expanded="false">
           <span></span>
           <span></span>
           <span></span>
         </button>
-
         <nav class="main-nav" aria-label="Main navigation">
           <ul>
             <li><a href="./index.html">Home</a></li>
-            <li><a href="./products.html">Products</a></li>
+            <li><a href="./products.html" class="active">Products</a></li>
             <li><a href="./index.html#services">Services</a></li>
             <li><a href="./about.html">About</a></li>
             <li><a href="./contact.html">Contact</a></li>
           </ul>
         </nav>
-
         <div class="header-actions">
-          </div>
-          <a class="button primary" href="https://wa.me/919989278002?text=Hello%20Mehar%20Gayatri%20Digitals%2C%20I%20want%20to%20enquire%20about%20a%20product." target="_blank" rel="noopener">WhatsApp</a>
+          <a class="button primary" href="https://wa.me/919989278002?text=Hello%20Mehar%20Gayatri%20Digitals%2C%20I%20want%20a%20product%20quote." target="_blank" rel="noopener">WhatsApp</a>
         </div>
       </div>
     </header>
 
     <main>
-      <div id="product-detail" class="container product-detail-page"></div>
-      <div id="related-products"></div>
+      <section class="page-hero compact">
+        <div class="container narrow text-center">
+          <p class="eyebrow">Showcase Your Memories</p>
+          <h1>Photo Frames in Jaggannapeta</h1>
+          <p class="hero-text" style="font-size: 1rem; color: var(--muted);">
+            At Mehar Gayatri Digitals, we help you preserve your cherished moments with our beautiful collection of photo frames. Whether you need a classic design for a family portrait or a modern frame for your artwork, we have the perfect solution for you right here in Jaggannapeta.
+          </p>
+        </div>
+      </section>
+
+      <section class="section catalog">
+        <div class="container">
+          <div class="section-heading">
+            <h2>Our Photo Frame Collection</h2>
+          </div>
+          <div class="results-meta">
+            <p id="results-count">Loading products...</p>
+          </div>
+          <div id="products-grid" class="product-grid" data-category="Photo Frames" aria-live="polite">
+            <!-- Products will be dynamically loaded here -->
+          </div>
+        </div>
+      </section>
     </main>
 
     <footer class="site-footer">
@@ -71,10 +91,9 @@
           <h5>Explore</h5>
           <ul>
             <li><a href="./index.html">Home</a></li>
-            <li><a href="./products.html">Products</a></li>
+            <li><a href="./products.html">All Products</a></li>
             <li><a href="./about.html">About</a></li>
             <li><a href="./contact.html">Contact</a></li>
-            <li><a href="https://maps.app.goo.gl/Q1SjzpBzMULkBWda9" target="_blank" rel="noopener">Google Maps</a></li>
           </ul>
         </div>
       </div>
@@ -83,14 +102,7 @@
       </div>
     </footer>
 
-    <a class="floating-whatsapp" href="https://wa.me/919989278002?text=Hello%20Mehar%20Gayatri%20Digitals%2C%20I%20found%20your%20website%20and%20would%20like%20to%20know%20more%20about%20your%20products%20and%20services." target="_blank" rel="noopener" aria-label="WhatsApp us">WhatsApp</a>
-
-    <div id="image-modal" class="image-modal" aria-hidden="true">
-      <button class="modal-close" aria-label="Close image viewer">×</button>
-      <img src="" alt="Product preview" />
-    </div>
-
     <script src="./js/main.js"></script>
-    <script src="./js/product-page.js"></script>
+    <script src="./js/products.js"></script>
   </body>
 </html>

@@ -61,7 +61,7 @@ function setActiveThumbnail(
    ========================================================= */
 
 const GOOGLE_SHEET_API =
-  "https://script.google.com/macros/s/AKfycbyvq36fsUwiad5L_G7z9ctYhv7pvaVf1VJpoJsNEYk3DNtvSQyDYLdolWkQFKgha1ye/exec";
+  "https://script.google.com/macros/s/AKfycbyQ_MYMw9f7ZRQ4fKTTyAwKz_BeCaBLVsXe9_FPamCrznbNTFxFskVL60ij7GOTh10R/exec";
 
 const PRODUCT_CACHE_KEY =
   "mehar-gayatri-products-cache-v1";
@@ -236,8 +236,7 @@ function refreshProductsInBackground() {
 
   if (
     !GOOGLE_SHEET_API ||
-    GOOGLE_SHEET_API ===
-      "https://script.google.com/macros/s/AKfycbyvq36fsUwiad5L_G7z9ctYhv7pvaVf1VJpoJsNEYk3DNtvSQyDYLdolWkQFKgha1ye/exec"
+    GOOGLE_SHEET_API.includes("PASTE_YOUR_APPS_SCRIPT_URL_HERE")
   ) {
     return;
   }
@@ -296,8 +295,7 @@ async function loadProductsForDetail() {
   */
 
   if (
-    GOOGLE_SHEET_API !==
-    "https://script.google.com/macros/s/AKfycbyvq36fsUwiad5L_G7z9ctYhv7pvaVf1VJpoJsNEYk3DNtvSQyDYLdolWkQFKgha1ye/exec"
+    !GOOGLE_SHEET_API.includes("PASTE_YOUR_APPS_SCRIPT_URL_HERE")
   ) {
 
     try {

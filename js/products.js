@@ -707,22 +707,35 @@ async function setupCatalogPage() {
   const products =
     await loadProducts();
 
+  const grid =
+    document.getElementById('products-grid');
+
   const searchInput =
     document.getElementById(
       'products-search'
     );
 
+  // For products.html (full catalog)
   const initialSearch =
     getQueryParam('search');
 
-  const initialCategory =
+  let initialCategory =
     getQueryParam('category');
 
+  // For new static category pages (e.g., photo-frames.html)
+  if (grid && grid.dataset.category) {
+    initialCategory = grid.dataset.category;
+  }
+
   const activeCategory =
-    initialCategory &&
-    initialCategory !== 'All'
+    initialCategory
       ? initialCategory
       : 'All';
+
+  // Hide category filters on static category pages
+  if (grid && grid.dataset.category && document.getElementById('category-filters')) {
+    document.getElementById('category-filters').style.display = 'none';
+  }
 
   renderProductFilters(
     products,
