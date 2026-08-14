@@ -31,8 +31,10 @@ button, input { font: inherit; }
 button { cursor: pointer; }
 
 .container {
-  width: min(1180px, calc(100% - 32px));
-  margin: 0 auto;
+  width: calc(100% - clamp(24px, 4vw, 80px));
+  max-width: 1600px;
+  margin-left: auto;
+  margin-right: auto;
 }
 .section {
   padding: 72px 0;
@@ -1112,7 +1114,7 @@ h3 {
 @media (max-width: 640px) {
 
   .container {
-    width: min(100% - 20px, 1180px);
+    width: calc(100% - 20px);
   }
 
   .section {
@@ -1407,10 +1409,10 @@ h3 {
    RELATED PRODUCTS SECTION
    ========================================================= */
 
-.related-section {
-  max-width: 1180px;
-  margin: 72px auto 40px;
-  padding: 0 16px;
+.related-product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: clamp(12px, 1.5vw, 24px);
 }
 
 .related-heading {
